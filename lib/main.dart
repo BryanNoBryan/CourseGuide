@@ -1,19 +1,61 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:course_guide/firebase_options.dart';
+import 'package:course_guide/providers/app_state.dart';
+import 'package:firebase_auth/firebase_auth.dart'
+    hide EmailAuthProvider, PhoneAuthProvider;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const MainApp());
+import 'navigation/MyNavigator.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  FirebaseUIAuth.configureProviders([
+    EmailAuthProvider(),
+  ]);
+
+  MyNavigator();
+
+  if (kDebugMode) {
+    try {
+      FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+      await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+    }
+  }
+
+  runApp(const MyApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) {
+            return AppState();
+          },
+        )
+      ],
+      child: MaterialApp.router(
+        theme: ThemeData(
+          fontFamily: 'OpenSans',
+          primarySwatch: Colors.blue,
         ),
+        debugShowCheckedModeBanner: false,
+        routerConfig: MyNavigator.router,
+        title: 'Course Guide',
       ),
     );
   }
