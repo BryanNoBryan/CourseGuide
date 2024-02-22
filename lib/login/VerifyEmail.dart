@@ -17,6 +17,9 @@ class VerifyEmail extends StatefulWidget {
 }
 
 class _VerifyEmailState extends State<VerifyEmail> {
+  Timer? timer;
+  bool isEmailVerified = false;
+
   @override
   void initState() {
     super.initState();
@@ -28,7 +31,22 @@ class _VerifyEmailState extends State<VerifyEmail> {
       } else {
         sendVerificationEmail();
       }
+
+      timer = Timer.periodic(const Duration(seconds: 3), (_) async {
+        await FirebaseAuth.instance.currentUser!.reload();
+        setState(() {
+          isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+          log('verified $isEmailVerified');
+        });
+        if (isEmailVerified) timer?.cancel();
+      });
     });
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   void sendVerificationEmail() async {
@@ -48,7 +66,8 @@ class _VerifyEmailState extends State<VerifyEmail> {
     return Consumer<UserState>(
       builder: (context, value, child) {
         log(value.verified.toString());
-        if (value.verified) {
+
+        if (isEmailVerified) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             MyNavigator.shell.goBranch(1);
           });

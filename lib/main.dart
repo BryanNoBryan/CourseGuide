@@ -32,7 +32,9 @@ void main() async {
       print(e);
     }
   }
+
   UserState();
+  AppState();
 
   runApp(const MyApp());
 }

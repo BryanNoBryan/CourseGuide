@@ -1,6 +1,10 @@
 import 'dart:developer';
 
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:course_guide/firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart'
+    hide EmailAuthProvider, PhoneAuthProvider;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/foundation.dart';
 
 class UserState extends ChangeNotifier {
@@ -15,7 +19,16 @@ class UserState extends ChangeNotifier {
   bool get verified => _verified;
 
   Future<void> _init() async {
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
+
+    FirebaseUIAuth.configureProviders([
+      EmailAuthProvider(),
+    ]);
+
+    log('PROCCED');
     FirebaseAuth.instance.userChanges().listen((user) {
+      log('PROCCED INSIDE');
       if (user != null) {
         _loggedIn = true;
         if (user.emailVerified) {
@@ -29,5 +42,6 @@ class UserState extends ChangeNotifier {
       }
       notifyListeners();
     });
+    notifyListeners();
   }
 }

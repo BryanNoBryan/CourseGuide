@@ -13,6 +13,9 @@ class AuthGate extends StatelessWidget {
       MyNavigator.router.pushReplacement(MyNavigator.verifyEmailPath);
     }
 
+    //CHANGE LOGIC HERE SO THAT IF CURRENTUSER NO EXIST -> AUTO ANONYMOUS SIGN IN
+    //ADD A BUTTON TO LOWEST TIER TO SIGN IN
+
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
