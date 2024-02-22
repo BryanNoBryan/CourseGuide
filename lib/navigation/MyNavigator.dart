@@ -1,6 +1,7 @@
 import 'dart:developer';
 
-import 'package:course_guide/content/auth_gate.dart';
+import 'package:course_guide/login/VerifyEmail.dart';
+import 'package:course_guide/login/WelcomeLogin.dart';
 import 'package:course_guide/content/placeholder.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
@@ -27,10 +28,9 @@ class MyNavigator {
   static final GlobalKey<NavigatorState> parentNavigatorKey =
       GlobalKey<NavigatorState>();
 
-  static final GlobalKey<NavigatorState> loginNavigatorKey =
-      GlobalKey<NavigatorState>();
+  //
 
-  static final GlobalKey<NavigatorState> forgotPasswordNavigatorKey =
+  static final GlobalKey<NavigatorState> loginNavigatorKey =
       GlobalKey<NavigatorState>();
 
   static final GlobalKey<NavigatorState> adminHomeNavigatorKey =
@@ -48,7 +48,9 @@ class MyNavigator {
   static final GlobalKey<NavigatorState> profileNavigatorKey =
       GlobalKey<NavigatorState>();
 
+  static const String defaultPath = '/';
   static const String loginPath = '/login';
+  static const String verifyEmailPath = '/login/verify-email';
   static const String forgotPasswordPath = '/login/forgot-password';
 
   static const String adminHomePath = '/adminHome';
@@ -62,8 +64,8 @@ class MyNavigator {
   static const String adminAnnouncementPath = '/AdminAnnouncementPage';
   static const String userAnnouncementPath = '/announcementPage';
 
-  static const String adminViewAttendance = '/AdminViewAttendance';
-  static const String adminViewSignUp = '/AdminViewSignUp';
+  static const String adminViewAttendancePath = '/AdminViewAttendance';
+  static const String adminViewSignUpPath = '/AdminViewSignUp';
 
   MyNavigator._internal() {
     final routes = [
@@ -74,6 +76,14 @@ class MyNavigator {
               navigatorKey: loginNavigatorKey,
               initialLocation: loginPath,
               routes: [
+                GoRoute(
+                    path: defaultPath,
+                    pageBuilder: (context, GoRouterState state) {
+                      return getPage(
+                        child: const AuthGate(),
+                        state: state,
+                      );
+                    }),
                 GoRoute(
                     path: loginPath,
                     pageBuilder: (context, GoRouterState state) {
@@ -91,6 +101,14 @@ class MyNavigator {
                           email: arguments['email'],
                           headerMaxExtent: 200,
                         ),
+                        state: state,
+                      );
+                    }),
+                GoRoute(
+                    path: verifyEmailPath,
+                    pageBuilder: (context, GoRouterState state) {
+                      return getPage(
+                        child: const VerifyEmail(),
                         state: state,
                       );
                     }),
@@ -117,7 +135,7 @@ class MyNavigator {
                       );
                     }),
                 GoRoute(
-                    path: adminViewAttendance,
+                    path: adminViewAttendancePath,
                     pageBuilder: (context, GoRouterState state) {
                       return getPage(
                         child: const temptest(),
@@ -125,7 +143,7 @@ class MyNavigator {
                       );
                     }),
                 GoRoute(
-                    path: adminViewSignUp,
+                    path: adminViewSignUpPath,
                     pageBuilder: (context, GoRouterState state) {
                       return getPage(
                         child: temptest(),

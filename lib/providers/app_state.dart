@@ -4,6 +4,10 @@ class AppState extends ChangeNotifier {
   int counter = 0;
 
   AppState() {
+    _init();
+  }
+
+  Future<void> _init() async {
     counter = 0;
   }
 

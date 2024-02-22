@@ -9,6 +9,10 @@ class AuthGate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (FirebaseAuth.instance.currentUser != null) {
+      MyNavigator.router.pushReplacement(MyNavigator.verifyEmailPath);
+    }
+
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
@@ -20,7 +24,7 @@ class AuthGate extends StatelessWidget {
             actions: [
               ForgotPasswordAction(((context, email) {
                 final uri = Uri(
-                  path: '/login/forgot-password',
+                  path: MyNavigator.forgotPasswordPath,
                   queryParameters: <String, String?>{
                     'email': email,
                   },
@@ -39,14 +43,7 @@ class AuthGate extends StatelessWidget {
                 if (state is UserCreated) {
                   user.updateDisplayName(user.email!.split('@')[0]);
                 }
-                if (!user.emailVerified) {
-                  user.sendEmailVerification();
-                  const snackBar = SnackBar(
-                      content: Text(
-                          'Please check your email to verify your email address'));
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                }
-                context.pushReplacement('/');
+                MyNavigator.router.pushReplacement(MyNavigator.verifyEmailPath);
               })),
             ],
             headerBuilder: (context, constraints, shrinkOffset) {
@@ -89,7 +86,6 @@ class AuthGate extends StatelessWidget {
           );
         }
 
-        MyNavigator.shell.goBranch(1);
         return const Placeholder();
       },
     );

@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'navigation/MyNavigator.dart';
+import 'providers/user_state.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +32,7 @@ void main() async {
       print(e);
     }
   }
+  UserState();
 
   runApp(const MyApp());
 }
@@ -45,6 +47,11 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) {
             return AppState();
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) {
+            return UserState();
           },
         )
       ],

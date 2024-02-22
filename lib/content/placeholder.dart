@@ -25,7 +25,6 @@ class _temptestState extends State<temptest> {
               onPressed: () {
                 value.counter = 3;
                 value.increment(x: 1);
-                value.notifyListeners();
               },
               child: Text(value.counter.toString()),
             ),
@@ -42,8 +41,8 @@ class _temptestState extends State<temptest> {
               },
               child: Text("dec")),
           ElevatedButton(
-              onPressed: () {
-                FirebaseAuth.instance.signOut();
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
                 MyNavigator.shell.goBranch(0);
               },
               child: Text("logout")),
