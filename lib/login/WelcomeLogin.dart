@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:course_guide/navigation/MyNavigator.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
@@ -9,6 +11,8 @@ class AuthGate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log('happened?');
+
     if (FirebaseAuth.instance.currentUser != null) {
       MyNavigator.router.pushReplacement(MyNavigator.verifyEmailPath);
     }
