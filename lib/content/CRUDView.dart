@@ -41,9 +41,9 @@ class _CRUDViewState extends State<CRUDView> {
                 // });
 
                 final result = await FirebaseFunctions.instance
-                    .httpsCallable('writeMessage')
+                    .httpsCallable('writeMessagev2')
                     .call(<String, dynamic>{
-                  'text': 'bruhmoment',
+                  'text': 'bruhmomentv2',
                 });
 
                 log(result.data as String);

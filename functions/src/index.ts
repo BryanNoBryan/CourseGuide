@@ -23,6 +23,13 @@ exports.writeMessage = v1.https.onCall(async (data, context) => {
     return `Successfully received: ${original}`;
 });
 
+exports.writeMessagev2 = v2.https.onCall((request) => {
+    // Grab the text parameter.
+    const original = request.data.text;
+    //Returns the text received
+    return `Successfully received: ${original}`;
+});
+
 export const makeadmin = v2.https.onCall((request) => {
     const user = admin.auth.getUserByEmail(request.data.emailToElevate);
     return admin.auth.setCustomUserClaims(user.uid, {
