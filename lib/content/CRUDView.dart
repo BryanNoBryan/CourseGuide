@@ -37,24 +37,18 @@ class _CRUDViewState extends State<CRUDView> {
                 // final result = await FirebaseFunctions.instance
                 //     .httpsCallable('makeadmin')
                 //     .call(<String, dynamic>{
-                //   'text': text1.text,
+                //   'emailToElevate': text1.text,
                 // });
 
-                // log(result.data as String);
-                writeMessage('amogus');
+                final result = await FirebaseFunctions.instance
+                    .httpsCallable('v2hello')
+                    .call();
+
+                log(result.data as String);
               },
               child: Text("addAdmin")),
         ],
       )),
     );
-  }
-
-  Future<void> writeMessage(String message) async {
-    var func = FirebaseFunctions.instance.httpsCallable('sayhello');
-    try {
-      func().then((value) => log(value.data as String)).catchError(() {});
-    } catch (e) {
-      log(e.toString());
-    }
   }
 }

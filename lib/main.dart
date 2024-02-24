@@ -27,7 +27,11 @@ void main() async {
   if (kDebugMode) {
     try {
       FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+
+      //NEVER FORGOT - THIS LINE WAS 8 HOURS OF DEBUGGING
       FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
+      //
+
       await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
     } catch (e) {
       // ignore: avoid_print
