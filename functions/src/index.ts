@@ -1,8 +1,13 @@
+/*eslint-disable*/
+
+
 import * as v1 from 'firebase-functions/v1';
 import * as v2 from 'firebase-functions/v2';
-const admin = require('firebase-admin');
-admin.initializeApp(v1.config().firebase);
+import * as admin from 'firebase-admin';
+import { getAuth } from 'firebase-admin/auth';
+admin.initializeApp();
 
+//v1.config().firebase
 export const helloWorld = v1.https.onRequest((request, response) => {
     console.log('hello!');
     response.send('please work')
@@ -30,15 +35,36 @@ exports.writeMessagev2 = v2.https.onCall((request) => {
     return `Successfully received: ${original}`;
 });
 
-export const makeadmin = v2.https.onCall((request) => {
-    const user = admin.auth.getUserByEmail(request.data.emailToElevate);
-    return admin.auth.setCustomUserClaims(user.uid, {
-        role: 'super-admin',
-    }).then(() => {
-        return `${request.data.emailToElevate}`;
+exports.getuid = v2.https.onCall((request) => {
+    return request.auth?.uid;
+});
+
+exports.returnemail = v2.https.onCall((request) => {
+    return getAuth().getUserByEmail('h@gmail.com').then((user: any) => {return user.email});
+});
+
+exports.makeadmin = v2.https.onCall((request) => {
+    //apparently this one line is bad
+    
+    // return user.uid;
+    //WORKKKKKKKKKS
+    // return request.auth?.uid;
+    // return request.data.emailToElevate;
+    //
+
+    // return request.auth?.uid;
+    debugger;
+    return getAuth().getUserByEmail(request.auth!.uid).then((user: any) => {return user.email});
+    //idea try the bottom code first
+    // return admin.auth.setCustomUserClaims(user.uid, {
+    //     role: 'super-admin',
+    // }).then(() => {
+    //     return `${request.data.emailToElevate}`;
+    // }
+    // ).catch((err: any) => {return err;});
     }
-    ).catch((err: any) => {return err;});
-})
+);
+
 
 export const addDefaultRole = v1.auth.user().onCreate((user) => {
     debugger;

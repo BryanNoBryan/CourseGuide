@@ -33,22 +33,41 @@ class _CRUDViewState extends State<CRUDView> {
             textAlign: TextAlign.center,
           ),
           ElevatedButton(
-              onPressed: () async {
-                // final result = await FirebaseFunctions.instance
-                //     .httpsCallable('makeadmin')
-                //     .call(<String, dynamic>{
-                //   'emailToElevate': text1.text,
-                // });
+            onPressed: () async {
+              // final result = await FirebaseFunctions.instance
+              //     .httpsCallable('makeadmin')
+              //     .call(<String, dynamic>{
+              //   'emailToElevate': text1.text,
+              // });
 
-                final result = await FirebaseFunctions.instance
-                    .httpsCallable('writeMessagev2')
-                    .call(<String, dynamic>{
-                  'text': 'bruhmomentv2',
-                });
+              final result = await FirebaseFunctions.instance
+                  .httpsCallable('makeadmin')
+                  .call(<String, dynamic>{
+                'emailToElevate': 'h@gmail.com',
+              });
 
-                log(result.data as String);
-              },
-              child: Text("addAdmin")),
+              log(result.data.toString());
+            },
+            child: Text("addAdmin"),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final result = await FirebaseFunctions.instance
+                  .httpsCallable('getuid')
+                  .call();
+              log(result.data.toString());
+            },
+            child: Text("getuid"),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final result = await FirebaseFunctions.instance
+                  .httpsCallable('returnemail')
+                  .call();
+              log(result.data.toString());
+            },
+            child: Text("returnemail"),
+          ),
         ],
       )),
     );
