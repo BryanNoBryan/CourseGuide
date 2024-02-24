@@ -43,27 +43,25 @@ exports.returnemail = v2.https.onCall((request) => {
     return getAuth().getUserByEmail('h@gmail.com').then((user: any) => {return user.email});
 });
 
-exports.makeadmin = v2.https.onCall((request) => {
-    //apparently this one line is bad
-    
+exports.makeadmin = v2.https.onCall(async (request) => {
     // return user.uid;
     //WORKKKKKKKKKS
     // return request.auth?.uid;
     // return request.data.emailToElevate;
-    //
-
+    // const x = await getAuth().getUserByEmail(request.data.emailToElevate);
     // return request.auth?.uid;
-    debugger;
-    return getAuth().getUserByEmail(request.auth!.uid).then((user: any) => {return user.email});
+    // debugger;
+    // return getAuth().getUserByEmail(request.data.emailToElevate).then((user: any) => {return user.email});
     //idea try the bottom code first
-    // return admin.auth.setCustomUserClaims(user.uid, {
-    //     role: 'super-admin',
-    // }).then(() => {
-    //     return `${request.data.emailToElevate}`;
-    // }
-    // ).catch((err: any) => {return err;});
-    }
-);
+    const user = await getAuth().getUserByEmail(request.data.emailToElevate);
+
+    getAuth()
+        .setCustomUserClaims(user.uid, { role: 'super-admin' })
+        .then(() => {
+            return `magic ${user.email}`;
+        }
+    );
+});
 
 
 export const addDefaultRole = v1.auth.user().onCreate((user) => {
