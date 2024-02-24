@@ -1,17 +1,44 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * import {onCall} from "firebase-functions/v2/https";
- * import {onDocumentWritten} from "firebase-functions/v2/firestore";
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
+admin.initializeApp();
 
-import {onRequest} from "firebase-functions/v2/https";
-import * as logger from "firebase-functions/logger";
+export const helloWorld = functions.https.onRequest((request, response) => {
+  console.log("hello!");
+  response.send("please work");
+});
 
-// Start writing functions
-// https://firebase.google.com/docs/functions/typescript
+exports.sayhello = functions.https.onCall(async (data, context) => {
+  return "hello boi";
+});
+
+export const makeadmin = functions.https.onCall((request) => {
+    // debugger;
+    // const user = admin.auth.getUserByEmail(request.data.email);
+    // return admin.auth.setCustomUserClaims(request.data.user.uid, {
+    //     role: 'super-admin',
+    // }).then(() => {
+    //     return `<h1>${request.data.text}</h1>`;
+    // }
+    // );
+  return "<h1>please</h1>";
+});
+
+export const addDefaultRole = functions.auth.user().onCreate((user) => {
+//   debugger;
+  const uid = user.uid;
+
+  return admin.auth().setCustomUserClaims(uid, {
+    role: "regular",
+  }).then(() => {
+    console.log(uid);
+    return {
+      message: `Success! ${user.email} is regulared`,
+    };
+  }).catch((err: any) => {
+    return err;
+  });
+});
+
 
 // export const helloWorld = onRequest((request, response) => {
 //   logger.info("Hello logs!", {structuredData: true});

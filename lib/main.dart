@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:course_guide/firebase_options.dart';
 import 'package:course_guide/providers/app_state.dart';
 import 'package:firebase_auth/firebase_auth.dart'
@@ -26,6 +27,7 @@ void main() async {
   if (kDebugMode) {
     try {
       FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+      FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
       await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
     } catch (e) {
       // ignore: avoid_print

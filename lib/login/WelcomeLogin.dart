@@ -50,6 +50,10 @@ class AuthGate extends StatelessWidget {
                 if (state is UserCreated) {
                   user.updateDisplayName(user.email!.split('@')[0]);
                 }
+                if (FirebaseAuth.instance.currentUser!.emailVerified == true) {
+                  MyNavigator.router
+                      .pushReplacement(MyNavigator.CRUDViewAdminPath);
+                }
                 MyNavigator.router.pushReplacement(MyNavigator.verifyEmailPath);
               })),
             ],
