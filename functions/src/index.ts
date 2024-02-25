@@ -5,6 +5,7 @@ import * as v1 from 'firebase-functions/v1';
 import * as v2 from 'firebase-functions/v2';
 import * as admin from 'firebase-admin';
 import { getAuth } from 'firebase-admin/auth';
+import { error } from 'firebase-functions/logger';
 admin.initializeApp();
 
 //v1.config().firebase
@@ -43,24 +44,38 @@ exports.returnemail = v2.https.onCall((request) => {
     return getAuth().getUserByEmail('h@gmail.com').then((user: any) => {return user.email});
 });
 
-exports.makeadmin = v2.https.onCall(async (request) => {
-    // return user.uid;
-    //WORKKKKKKKKKS
-    // return request.auth?.uid;
-    // return request.data.emailToElevate;
-    // const x = await getAuth().getUserByEmail(request.data.emailToElevate);
-    // return request.auth?.uid;
-    // debugger;
-    // return getAuth().getUserByEmail(request.data.emailToElevate).then((user: any) => {return user.email});
-    //idea try the bottom code first
+exports.makeAdmin = v2.https.onCall(async (request) => {
+
+    const reqUID = request.auth?.uid;
+    if (reqUID == null) {
+        error('not logged in');
+    }
+
+    const reqClaims = (await getAuth().getUser(reqUID!)).customClaims;
+    if (reqClaims == null) {
+        error('how did claims get deleted!?');
+    }
+
+    // return `${(await getAuth().getUser(reqUID!)).email},,,${reqClaims!['role']}`;
+
+    if (!(reqClaims!['role'] === 'super-admin')) {
+        error('insufficent permissions!!');
+    }
+
     const user = await getAuth().getUserByEmail(request.data.emailToElevate);
+    
+    if (!["super-admin", "admin", "regular"].includes(request.data.role)) {
+        error('not a valid role');
+    }
+    const perms = request.data.role;
 
     getAuth()
-        .setCustomUserClaims(user.uid, { role: 'super-admin' })
+        .setCustomUserClaims(user.uid, { role: perms })
         .then(() => {
-            return `magic ${user.email}`;
-        }
-    );
+            return `magic ${user.email} is changed to ${perms}`;
+        }).catch((e) => {
+            error('setting claims error', e);
+        });
 });
 
 

@@ -41,9 +41,10 @@ class _CRUDViewState extends State<CRUDView> {
               // });
 
               final result = await FirebaseFunctions.instance
-                  .httpsCallable('makeadmin')
+                  .httpsCallable('makeAdmin')
                   .call(<String, dynamic>{
                 'emailToElevate': text1.text,
+                'role': 'super-admin',
               });
 
               log(result.data.toString());
