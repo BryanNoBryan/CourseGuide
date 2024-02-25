@@ -8,42 +8,6 @@ import { getAuth } from 'firebase-admin/auth';
 import { error } from 'firebase-functions/logger';
 admin.initializeApp();
 
-//v1.config().firebase
-export const helloWorld = v1.https.onRequest((request, response) => {
-    console.log('hello!');
-    response.send('please work')
-})
-
-exports.v1hello = v1.https.onCall(async (data, context) => {
-    return `Successfully received: v1`;
-});
-
-exports.v2hello = v2.https.onCall((request) => {
-    return `Successfully received: v2`;
-});
-
-exports.writeMessage = v1.https.onCall(async (data, context) => {
-    // Grab the text parameter.
-    const original = data.text;
-    //Returns the text received
-    return `Successfully received: ${original}`;
-});
-
-exports.writeMessagev2 = v2.https.onCall((request) => {
-    // Grab the text parameter.
-    const original = request.data.text;
-    //Returns the text received
-    return `Successfully received: ${original}`;
-});
-
-exports.getuid = v2.https.onCall((request) => {
-    return request.auth?.uid;
-});
-
-exports.returnemail = v2.https.onCall((request) => {
-    return getAuth().getUserByEmail('h@gmail.com').then((user: any) => {return user.email});
-});
-
 exports.makeAdmin = v2.https.onCall(async (request) => {
 
     const reqUID = request.auth?.uid;
@@ -94,6 +58,44 @@ export const addDefaultRole = v1.auth.user().onCreate((user) => {
 });
 
 
+
+
+
+// //v1.config().firebase
+// export const helloWorld = v1.https.onRequest((request, response) => {
+//     console.log('hello!');
+//     response.send('please work')
+// })
+
+// exports.v1hello = v1.https.onCall(async (data, context) => {
+//     return `Successfully received: v1`;
+// });
+
+// exports.v2hello = v2.https.onCall((request) => {
+//     return `Successfully received: v2`;
+// });
+
+// exports.writeMessage = v1.https.onCall(async (data, context) => {
+//     // Grab the text parameter.
+//     const original = data.text;
+//     //Returns the text received
+//     return `Successfully received: ${original}`;
+// });
+
+// exports.writeMessagev2 = v2.https.onCall((request) => {
+//     // Grab the text parameter.
+//     const original = request.data.text;
+//     //Returns the text received
+//     return `Successfully received: ${original}`;
+// });
+
+// exports.getuid = v2.https.onCall((request) => {
+//     return request.auth?.uid;
+// });
+
+// exports.returnemail = v2.https.onCall((request) => {
+//     return getAuth().getUserByEmail('h@gmail.com').then((user: any) => {return user.email});
+// });
 
 // export const helloWorld = onRequest((request, response) => {
 //   logger.info("Hello logs!", {structuredData: true});
