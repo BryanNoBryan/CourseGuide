@@ -27,6 +27,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       UserState user = Provider.of<UserState>(context, listen: false);
       if (user.verified) {
+        timer?.cancel();
         MyNavigator.shell.goBranch(1);
       } else {
         sendVerificationEmail();
@@ -38,7 +39,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
           isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
           log('verified $isEmailVerified');
         });
-        if (isEmailVerified) timer?.cancel();
+        checkVerification();
       });
     });
   }
@@ -47,6 +48,14 @@ class _VerifyEmailState extends State<VerifyEmail> {
   void dispose() {
     timer?.cancel();
     super.dispose();
+  }
+
+  void checkVerification() {
+    if (isEmailVerified) {
+      timer?.cancel();
+      log('verification check');
+      MyNavigator.calculateNavigation();
+    }
   }
 
   void sendVerificationEmail() async {
@@ -65,13 +74,11 @@ class _VerifyEmailState extends State<VerifyEmail> {
   Widget build(BuildContext context) {
     return Consumer<UserState>(
       builder: (context, value, child) {
-        log(value.verified.toString());
+        log('verified: ' + value.verified.toString());
 
-        if (isEmailVerified) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            MyNavigator.shell.goBranch(1);
-          });
-        }
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          checkVerification();
+        });
 
         return Center(
             child: Column(

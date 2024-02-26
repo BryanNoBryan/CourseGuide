@@ -1,10 +1,12 @@
 import 'dart:developer';
 
 import 'package:course_guide/navigation/MyNavigator.dart';
+import 'package:course_guide/providers/user_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:provider/provider.dart';
 
 class CRUDView extends StatefulWidget {
   const CRUDView({super.key});
@@ -24,8 +26,10 @@ class _CRUDViewState extends State<CRUDView> {
           Text('CRUDView'),
           ElevatedButton(
               onPressed: () async {
-                await FirebaseAuth.instance.signOut();
-                MyNavigator.shell.goBranch(0);
+                log('1');
+                await context.read<UserState>().logout();
+                log('2');
+                MyNavigator.calculateNavigation();
               },
               child: Text("logout")),
           TextField(
@@ -68,6 +72,20 @@ class _CRUDViewState extends State<CRUDView> {
               log(result.data.toString());
             },
             child: Text("returnemail"),
+          ),
+          FutureBuilder(
+            future: context.watch<UserState>().currentUserClaims,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done &&
+                  snapshot.hasData) {
+                return Text(
+                  'Role: ' + snapshot.data!['role'],
+                  style: TextStyle(fontSize: 32),
+                );
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
           ),
         ],
       )),

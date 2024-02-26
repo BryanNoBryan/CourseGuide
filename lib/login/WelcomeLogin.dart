@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:course_guide/navigation/MyNavigator.dart';
+import 'package:course_guide/providers/user_state.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +12,15 @@ class AuthGate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log('happened?');
+    log('auth gate built');
+    log('user is null' +
+        (FirebaseAuth.instance.currentUser == null).toString());
 
-    if (FirebaseAuth.instance.currentUser != null) {
+    if (UserState.user != null) {
+      if (UserState.user!.emailVerified) {
+        log('calced nav in login');
+        MyNavigator.calculateNavigation();
+      }
       MyNavigator.router.pushReplacement(MyNavigator.verifyEmailPath);
     }
 
@@ -51,10 +58,12 @@ class AuthGate extends StatelessWidget {
                   user.updateDisplayName(user.email!.split('@')[0]);
                 }
                 if (FirebaseAuth.instance.currentUser!.emailVerified == true) {
+                  log('calced nav in login v2');
+                  MyNavigator.calculateNavigation();
+                } else {
                   MyNavigator.router
-                      .pushReplacement(MyNavigator.CRUDViewAdminPath);
+                      .pushReplacement(MyNavigator.verifyEmailPath);
                 }
-                MyNavigator.router.pushReplacement(MyNavigator.verifyEmailPath);
               })),
             ],
             headerBuilder: (context, constraints, shrinkOffset) {

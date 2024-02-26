@@ -2,14 +2,24 @@ import 'dart:developer';
 
 import 'package:course_guide/content/CRUDView.dart';
 import 'package:course_guide/content/CourseView.dart';
+import 'package:course_guide/content/Favorites.dart';
+import 'package:course_guide/content/PermissionsView.dart';
+import 'package:course_guide/content/Profile.dart';
 import 'package:course_guide/login/VerifyEmail.dart';
 import 'package:course_guide/login/WelcomeLogin.dart';
 import 'package:course_guide/content/placeholder.dart';
+import 'package:course_guide/navigation/AdminPage.dart';
+import 'package:course_guide/navigation/AnonymousPage.dart';
+import 'package:course_guide/navigation/PlaceholderPage.dart';
+import 'package:course_guide/navigation/RegularUserPage.dart';
+import 'package:course_guide/navigation/SuperAdminPage.dart';
+import 'package:course_guide/providers/user_state.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
-import 'NavigationLoginPage.dart';
+import 'LoginPage.dart';
 
 class MyNavigator {
   static final MyNavigator _instance = MyNavigator._internal();
@@ -24,30 +34,17 @@ class MyNavigator {
 
   static late final GoRouter router;
 
-  static late int _navigationbarIndex;
-  static int get navigationbarIndex => _navigationbarIndex;
-
   static final GlobalKey<NavigatorState> parentNavigatorKey =
       GlobalKey<NavigatorState>();
 
   //
+  static final GlobalKey<NavigatorState> checkLoginKey =
+      GlobalKey<NavigatorState>();
 
   static final GlobalKey<NavigatorState> loginNavigatorKey =
       GlobalKey<NavigatorState>();
 
-  static final GlobalKey<NavigatorState> CRUDViewSuperAdminKey =
-      GlobalKey<NavigatorState>();
-
-  static final GlobalKey<NavigatorState> CRUDViewAdminKey =
-      GlobalKey<NavigatorState>();
-
-  static final GlobalKey<NavigatorState> CourseViewKey =
-      GlobalKey<NavigatorState>();
-
-  static final GlobalKey<NavigatorState> userEventNavigatorKey =
-      GlobalKey<NavigatorState>();
-
-  static final GlobalKey<NavigatorState> profileNavigatorKey =
+  static final GlobalKey<NavigatorState> contentKey =
       GlobalKey<NavigatorState>();
 
   static const String defaultPath = '/';
@@ -55,37 +52,24 @@ class MyNavigator {
   static const String verifyEmailPath = '/login/verify-email';
   static const String forgotPasswordPath = '/login/forgot-password';
 
-  static const String CRUDViewSuperAdminPath = '/adminHome';
-  static const String CRUDViewAdminPath = '/userHome';
+  static const String CRUDViewPath = '/crud';
 
-  static const String CourseViewPath = '/adminEvent';
-  static const String userEventPath = '/userEvent';
+  static const String CourseViewPath = '/courses';
+  static const String permissionsViewPath = '/courses';
 
   static const String profilePath = '/profile';
-
-  static const String adminAnnouncementPath = '/AdminAnnouncementPage';
-  static const String userAnnouncementPath = '/announcementPage';
-
-  static const String adminViewAttendancePath = '/AdminViewAttendance';
-  static const String adminViewSignUpPath = '/AdminViewSignUp';
+  static const String favoritesPath = '/favorites';
 
   MyNavigator._internal() {
     final routes = [
       StatefulShellRoute.indexedStack(
         parentNavigatorKey: parentNavigatorKey,
         branches: [
+          //login and default check
           StatefulShellBranch(
               navigatorKey: loginNavigatorKey,
               initialLocation: loginPath,
               routes: [
-                GoRoute(
-                    path: defaultPath,
-                    pageBuilder: (context, GoRouterState state) {
-                      return getPage(
-                        child: const AuthGate(),
-                        state: state,
-                      );
-                    }),
                 GoRoute(
                     path: loginPath,
                     pageBuilder: (context, GoRouterState state) {
@@ -117,11 +101,19 @@ class MyNavigator {
               ]),
           //SUPER ADMIN
           StatefulShellBranch(
-              navigatorKey: CRUDViewSuperAdminKey,
-              initialLocation: CRUDViewSuperAdminPath,
+              navigatorKey: contentKey,
+              initialLocation: CRUDViewPath,
               routes: [
                 GoRoute(
-                  path: CRUDViewSuperAdminPath,
+                    path: defaultPath,
+                    pageBuilder: (context, GoRouterState state) {
+                      return getPage(
+                        child: const CourseView(),
+                        state: state,
+                      );
+                    }),
+                GoRoute(
+                  path: CRUDViewPath,
                   pageBuilder: (context, GoRouterState state) {
                     return getPage(
                       child: const CRUDView(),
@@ -129,31 +121,35 @@ class MyNavigator {
                     );
                   },
                 ),
-              ]),
-          //ADMIN
-          StatefulShellBranch(
-              navigatorKey: CRUDViewAdminKey,
-              initialLocation: CRUDViewAdminPath,
-              routes: [
-                GoRoute(
-                    path: CRUDViewAdminPath,
-                    pageBuilder: (context, GoRouterState state) {
-                      return getPage(
-                        child: const CRUDView(),
-                        state: state,
-                      );
-                    }),
-              ]),
-          //REGULAR USER
-          StatefulShellBranch(
-              navigatorKey: CourseViewKey,
-              initialLocation: CourseViewPath,
-              routes: [
                 GoRoute(
                     path: CourseViewPath,
                     pageBuilder: (context, GoRouterState state) {
                       return getPage(
                         child: const CourseView(),
+                        state: state,
+                      );
+                    }),
+                GoRoute(
+                    path: permissionsViewPath,
+                    pageBuilder: (context, GoRouterState state) {
+                      return getPage(
+                        child: const PermissionsView(),
+                        state: state,
+                      );
+                    }),
+                GoRoute(
+                    path: profilePath,
+                    pageBuilder: (context, GoRouterState state) {
+                      return getPage(
+                        child: const Profile(),
+                        state: state,
+                      );
+                    }),
+                GoRoute(
+                    path: favoritesPath,
+                    pageBuilder: (context, GoRouterState state) {
+                      return getPage(
+                        child: const Favorites(),
                         state: state,
                       );
                     }),
@@ -166,7 +162,30 @@ class MyNavigator {
         ) {
           _navigationShell = navigationShell;
           return getPage(
-            child: NavigationLoginPage(child: navigationShell),
+            child: (shell.currentIndex == 0)
+                ? NavigationLoginPage(child: navigationShell)
+                : FutureBuilder(
+                    future: context.watch<UserState>().currentUserClaims,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState != ConnectionState.done) {
+                        return const CircularProgressIndicator();
+                      }
+                      if (!snapshot.hasData) {
+                        return AnonymousPage(child: navigationShell);
+                      } else {
+                        switch (snapshot.data!['role']) {
+                          case UserState.SUPERADMIN:
+                            return SuperAdminPage(child: navigationShell);
+                          case UserState.ADMIN:
+                            return AdminPage(child: navigationShell);
+                          case UserState.REGULAR:
+                            return RegularUserPage(child: navigationShell);
+                        }
+                      }
+
+                      return PlaceholderPage(child: navigationShell);
+                    },
+                  ),
             state: state,
           );
         },
@@ -174,7 +193,7 @@ class MyNavigator {
     ];
     router = GoRouter(
       navigatorKey: parentNavigatorKey,
-      initialLocation: loginPath,
+      initialLocation: defaultPath,
       routes: routes,
     );
   }
@@ -187,6 +206,33 @@ class MyNavigator {
       key: state.pageKey,
       child: child,
     );
+  }
+
+  static Future<void> calculateNavigation() async {
+    log('calualting');
+    UserState state = UserState();
+    bool loggedIn = state.loggedIn;
+    bool verified = state.verified;
+    log(loggedIn.toString());
+    log(verified.toString());
+    if (loggedIn) {
+      if (!verified) {
+        log('not verified');
+      } else {
+        log('logged in and verified USERSTATE');
+        var claims = await state.currentUserClaims;
+        String? role = claims?['role'];
+        if (role == null || role == UserState.REGULAR) {
+          log('NULL OR REGULAR');
+          MyNavigator.shell.goBranch(1);
+          MyNavigator.router.go(MyNavigator.CourseViewPath);
+        } else if (role == UserState.ADMIN || role == UserState.SUPERADMIN) {
+          log('ADMIN OR SUPER ADMIN');
+          MyNavigator.shell.goBranch(1);
+          MyNavigator.router.go(MyNavigator.CRUDViewPath);
+        }
+      }
+    }
   }
 }
 

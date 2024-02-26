@@ -42,6 +42,8 @@ void main() async {
   UserState();
   AppState();
 
+  //calculate after initializing providers
+  MyNavigator.calculateNavigation();
   runApp(const MyApp());
 }
 

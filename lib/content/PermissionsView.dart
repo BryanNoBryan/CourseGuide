@@ -10,7 +10,7 @@ class PermissionsView extends StatefulWidget {
 class _PermissionsViewState extends State<PermissionsView> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(child: Text('PermissionsView')),
     );
   }
