@@ -55,6 +55,34 @@ class _CRUDViewState extends State<CRUDView> {
             },
             child: Text("addAdmin"),
           ),
+          IconButton(
+              onPressed: () {
+                AlertDialog alert = AlertDialog(
+                  title: Text("Add Course"),
+                  content: ListView(
+                    children: [TextButton(onPressed: onPressed, child: child)],
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {},
+                      child: Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      child: Text('Submit'),
+                    ),
+                  ],
+                );
+
+                // show the dialog
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return alert;
+                  },
+                );
+              },
+              icon: Icon(Icons.add)),
           ElevatedButton(
             onPressed: () async {
               final result = await FirebaseFunctions.instance
