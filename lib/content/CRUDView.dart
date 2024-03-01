@@ -16,6 +16,12 @@ class CRUDView extends StatefulWidget {
 }
 
 class _CRUDViewState extends State<CRUDView> {
+  final RegExp _emailRegex = RegExp(r'^\S+@\S+$');
+
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  TextEditingController emailController = TextEditingController();
+
   TextEditingController text1 = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -60,7 +66,22 @@ class _CRUDViewState extends State<CRUDView> {
                 AlertDialog alert = AlertDialog(
                   title: Text("Add Course"),
                   content: ListView(
-                    children: [TextButton(onPressed: onPressed, child: child)],
+                    children: [
+                      Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              TextFormField(
+                                controller: emailController,
+                                validator: (value) {
+                                  if (_emailRegex.hasMatch(value!)) {
+                                    emailController.text = 'wrong format';
+                                  }
+                                },
+                              )
+                            ],
+                          ))
+                    ],
                   ),
                   actions: [
                     TextButton(
@@ -68,7 +89,9 @@ class _CRUDViewState extends State<CRUDView> {
                       child: Text('Cancel'),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        _formKey.currentState!.validate();
+                      },
                       child: Text('Submit'),
                     ),
                   ],
