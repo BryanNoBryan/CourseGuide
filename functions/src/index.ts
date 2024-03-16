@@ -42,6 +42,9 @@ exports.makeAdmin = v2.https.onCall(async (request) => {
         });
 });
 
+exports.userIntoDatabase = v1.auth.user().onCreate((user) => {
+    admin.firestore().collection('Users').doc(user.uid).set({'UID': user.uid});
+});
 
 export const addDefaultRole = v1.auth.user().onCreate((user) => {
     debugger;

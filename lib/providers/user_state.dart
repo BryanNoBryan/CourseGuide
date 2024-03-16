@@ -64,6 +64,9 @@ class UserState extends ChangeNotifier {
 
   Future<void> logout() async {
     log('logged out');
-    return FirebaseAuth.instance.signOut();
+    await FirebaseAuth.instance.signOut();
+    _verified = false;
+    _user = null;
+    MyNavigator.router.go(MyNavigator.CourseViewPath);
   }
 }

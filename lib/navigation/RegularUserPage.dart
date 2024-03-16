@@ -24,6 +24,13 @@ class _RegularUserPageState extends State<RegularUserPage> {
           IconTextButton(
             icon: Icon(Icons.favorite),
             onPressed: () {
+              MyNavigator.router.go(MyNavigator.CourseViewPath);
+            },
+            label: 'Courses',
+          ),
+          IconTextButton(
+            icon: Icon(Icons.favorite),
+            onPressed: () {
               MyNavigator.router.go(MyNavigator.favoritesPath);
             },
             label: 'Favorites',

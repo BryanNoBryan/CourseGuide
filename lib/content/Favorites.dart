@@ -1,4 +1,8 @@
 import 'package:course_guide/navigation/MyNavigator.dart';
+import 'package:course_guide/providers/User.dart';
+import 'package:course_guide/providers/UserDatabase.dart';
+import 'package:course_guide/providers/database.dart';
+import 'package:course_guide/widgets/CourseWidget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -10,21 +14,59 @@ class Favorites extends StatefulWidget {
 }
 
 class _FavoritesState extends State<Favorites> {
+  MyUser? user;
+  List<String>? favorites = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    user = UserDatabase().getUser();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      favorites = await UserDatabase().getFavorites(user);
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-          child: Column(
-        children: [
-          Text('Favorites'),
-          ElevatedButton(
-              onPressed: () async {
-                await FirebaseAuth.instance.signOut();
-                MyNavigator.shell.goBranch(0);
+      appBar: AppBar(
+        title: Text('Favorites'),
+        centerTitle: true,
+      ),
+      body: FutureBuilder(
+        future: Database().getCoursesFromFavorites(favorites),
+        builder: (context, snapshot) {
+          if (snapshot.hasData &&
+              snapshot.connectionState == ConnectionState.done &&
+              snapshot.data!.length == 0) {
+            print('NOTHINGLESS OPTION');
+            return SizedBox.shrink();
+          } else if (snapshot.hasData &&
+              snapshot.connectionState == ConnectionState.done) {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                return CourseWidget(
+                  course: snapshot.data![index],
+                  onFavorite: () async {
+                    await UserDatabase().removeFromFavorite(
+                        snapshot.data![index].code ?? 'ERROR');
+                    favorites = await UserDatabase().getFavorites(user);
+                    setState(() {});
+                  },
+                  admin: false,
+                  hasAccount: true,
+                );
               },
-              child: Text("logout")),
-        ],
-      )),
+            );
+          } else {
+            return const CircularProgressIndicator();
+          }
+        },
+      ),
     );
   }
 }

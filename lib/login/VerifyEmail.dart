@@ -28,7 +28,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
       UserState user = Provider.of<UserState>(context, listen: false);
       if (user.verified) {
         timer?.cancel();
-        MyNavigator.shell.goBranch(1);
+        MyNavigator.calculateNavigation();
       } else {
         sendVerificationEmail();
       }

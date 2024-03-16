@@ -22,6 +22,13 @@ class _SuperAdminPageState extends State<SuperAdminPage> {
         surfaceTintColor: MyColors.lightYellow,
         actions: [
           IconTextButton(
+            icon: Icon(Icons.book),
+            onPressed: () {
+              MyNavigator.router.go(MyNavigator.CRUDViewPath);
+            },
+            label: 'Courses',
+          ),
+          IconTextButton(
             icon: Icon(Icons.favorite),
             onPressed: () {
               MyNavigator.router.go(MyNavigator.favoritesPath);

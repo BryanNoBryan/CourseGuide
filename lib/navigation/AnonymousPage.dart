@@ -18,7 +18,7 @@ class _AnonymousPageState extends State<AnonymousPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Anonymous'),
+        title: Text('Guest'),
         surfaceTintColor: MyColors.lightYellow,
         elevation: 5,
         actions: [
@@ -26,6 +26,7 @@ class _AnonymousPageState extends State<AnonymousPage> {
             icon: Icon(Icons.person),
             onPressed: () {
               MyNavigator.shell.goBranch(0);
+              MyNavigator.router.go(MyNavigator.loginPath);
             },
             label: 'Sign In / Sign Up',
           ),

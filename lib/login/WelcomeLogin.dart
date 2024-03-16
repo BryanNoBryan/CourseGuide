@@ -7,25 +7,34 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class AuthGate extends StatelessWidget {
+class AuthGate extends StatefulWidget {
   const AuthGate({super.key});
+
+  @override
+  State<AuthGate> createState() => _AuthGateState();
+}
+
+class _AuthGateState extends State<AuthGate> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (UserState.user != null) {
+        if (UserState.user!.emailVerified) {
+          log('calced nav in login');
+          MyNavigator.calculateNavigation();
+        }
+        MyNavigator.router.pushReplacement(MyNavigator.verifyEmailPath);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     log('auth gate built');
     log('user is null' +
         (FirebaseAuth.instance.currentUser == null).toString());
-
-    if (UserState.user != null) {
-      if (UserState.user!.emailVerified) {
-        log('calced nav in login');
-        MyNavigator.calculateNavigation();
-      }
-      MyNavigator.router.pushReplacement(MyNavigator.verifyEmailPath);
-    }
-
-    //CHANGE LOGIC HERE SO THAT IF CURRENTUSER NO EXIST -> AUTO ANONYMOUS SIGN IN
-    //ADD A BUTTON TO LOWEST TIER TO SIGN IN
 
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),

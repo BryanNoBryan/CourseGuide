@@ -13,6 +13,7 @@ import 'package:course_guide/navigation/AnonymousPage.dart';
 import 'package:course_guide/navigation/PlaceholderPage.dart';
 import 'package:course_guide/navigation/RegularUserPage.dart';
 import 'package:course_guide/navigation/SuperAdminPage.dart';
+import 'package:course_guide/providers/UserDatabase.dart';
 import 'package:course_guide/providers/user_state.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,7 @@ class MyNavigator {
   static const String CRUDViewPath = '/crud';
 
   static const String CourseViewPath = '/courses';
-  static const String permissionsViewPath = '/courses';
+  static const String permissionsViewPath = '/perms';
 
   static const String profilePath = '/profile';
   static const String favoritesPath = '/favorites';
@@ -217,11 +218,10 @@ class MyNavigator {
     log(verified.toString());
     if (loggedIn) {
       if (!verified) {
-        log('not verified');
       } else {
-        log('logged in and verified USERSTATE');
         var claims = await state.currentUserClaims;
         String? role = claims?['role'];
+        await UserDatabase().retrieveUser();
         if (role == null || role == UserState.REGULAR) {
           log('NULL OR REGULAR');
           MyNavigator.shell.goBranch(1);
