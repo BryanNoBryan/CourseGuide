@@ -34,7 +34,13 @@ class Database {
 
   Future<void> retrieveCourses() async {
     print('course retrieved');
-    var snapshot = await FirebaseFirestore.instance.collection('Courses').get();
+    var snapshot =
+        await FirebaseFirestore.instance.collection('Courses').get().then(
+              (doc) => doc,
+              onError: (e) => print("Error updating document $e"),
+            );
+    ;
+    print('bruh');
     courses =
         snapshot.docs.map((doc) => Course.fromFirestore(doc, null)).toList();
     print('retrieve: + $courses');
