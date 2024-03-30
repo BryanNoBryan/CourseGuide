@@ -26,20 +26,20 @@ void main() async {
 
   MyNavigator();
 
-  if (kDebugMode) {
-    try {
-      FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+  // if (kDebugMode) {
+  //   try {
+  //     FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
 
-      //NEVER FORGOT - THIS LINE WAS 8 HOURS OF DEBUGGING
-      FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
-      //
+  //     //NEVER FORGOT - THIS LINE WAS 8 HOURS OF DEBUGGING
+  //     FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
+  //     //
 
-      await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
-    } catch (e) {
-      // ignore: avoid_print
-      print(e);
-    }
-  }
+  //     await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+  //   } catch (e) {
+  //     // ignore: avoid_print
+  //     print(e);
+  //   }
+  // }
 
   UserState();
   AppState();
@@ -67,13 +67,25 @@ class MyApp extends StatelessWidget {
           create: (context) {
             return UserState();
           },
-        )
+        ),
       ],
       child: MaterialApp.router(
         theme: ThemeData(
-          fontFamily: 'OpenSans',
-          primarySwatch: Colors.blue,
-        ),
+            fontFamily: 'OpenSans',
+            primarySwatch: Colors.blue,
+            colorScheme: const ColorScheme(
+              brightness: Brightness.light,
+              primary: Color(0xFF202020),
+              onPrimary: Color(0xFF505050),
+              secondary: Color(0xFFBBBBBB),
+              onSecondary: Color.fromARGB(255, 66, 69, 73),
+              error: Color(0xFFF32424),
+              onError: Color(0xFFF32424),
+              background: Color.fromARGB(255, 118, 125, 134),
+              onBackground: Color.fromARGB(37, 114, 137, 218),
+              surface: Color.fromARGB(255, 255, 255, 255),
+              onSurface: Color.fromARGB(255, 0, 0, 0),
+            )),
         debugShowCheckedModeBanner: false,
         routerConfig: MyNavigator.router,
         title: 'Course Guide',

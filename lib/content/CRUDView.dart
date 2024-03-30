@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:course_guide/MyColors.dart';
 import 'package:course_guide/navigation/MyNavigator.dart';
 import 'package:course_guide/providers/Course.dart';
 import 'package:course_guide/providers/UserDatabase.dart';
@@ -53,13 +54,16 @@ class _CRUDViewState extends State<CRUDView> {
             print('here here $courses');
             setState(() {});
           },
-          child: Icon(Icons.add)),
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          )),
       body: Column(
         children: [
           Center(
             child: Text(
               'Admin View',
-              style: TextStyle(fontSize: 36),
+              style: TextStyle(fontSize: 36, color: Colors.white),
             ),
           ),
           Expanded(
@@ -74,7 +78,7 @@ class _CRUDViewState extends State<CRUDView> {
                       children: [
                         Text(
                           'Query By: ',
-                          style: TextStyle(fontSize: 26),
+                          style: TextStyle(fontSize: 26, color: Colors.white),
                         ),
                         Container(
                           height: 70,
@@ -82,9 +86,13 @@ class _CRUDViewState extends State<CRUDView> {
                           child: DropdownButton<String>(
                             isExpanded: true,
                             value: queryChoice,
-                            icon: const Icon(Icons.arrow_downward),
+                            icon: const Icon(
+                              Icons.arrow_downward,
+                              color: Color.fromARGB(255, 201, 238, 255),
+                            ),
                             elevation: 16,
-                            style: const TextStyle(color: Colors.deepPurple),
+                            dropdownColor: MyColors.lightBlue,
+                            style: const TextStyle(color: Colors.black),
                             underline: Container(
                               height: 2,
                               color: Colors.deepPurpleAccent,
@@ -99,9 +107,13 @@ class _CRUDViewState extends State<CRUDView> {
                                 .map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
-                                child: Text(
-                                  value,
-                                  style: TextStyle(fontSize: 20),
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  color: MyColors.lightBlue,
+                                  child: Text(
+                                    value,
+                                    style: TextStyle(fontSize: 20),
+                                  ),
                                 ),
                               );
                             }).toList(),
@@ -110,17 +122,24 @@ class _CRUDViewState extends State<CRUDView> {
                         switch (queryChoice) {
                           'Keywords' => TextField(
                               controller: keywords,
-                              decoration:
-                                  InputDecoration(label: Text('Keywords')),
+                              decoration: InputDecoration(
+                                  label: Text('Keywords'),
+                                  filled: true,
+                                  fillColor: MyColors.lightBlue),
                             ),
                           'Subject' => TextField(
                               controller: subject,
-                              decoration:
-                                  InputDecoration(label: Text('Subject')),
+                              decoration: InputDecoration(
+                                  label: Text('Subject'),
+                                  filled: true,
+                                  fillColor: MyColors.lightBlue),
                             ),
                           'Level' => TextField(
                               controller: level,
-                              decoration: InputDecoration(label: Text('Level')),
+                              decoration: InputDecoration(
+                                  label: Text('Level'),
+                                  filled: true,
+                                  fillColor: MyColors.lightBlue),
                             ),
                           _ => TextField(),
                         },
@@ -131,6 +150,7 @@ class _CRUDViewState extends State<CRUDView> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
+                              backgroundColor: MyColors.lightBlue,
                             ),
                             onPressed: () async {
                               courses = Database().queryCourses(
@@ -153,6 +173,17 @@ class _CRUDViewState extends State<CRUDView> {
                               "Query",
                               style: TextStyle(fontSize: 32),
                             ),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                              color: MyColors.lightBlue,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: Colors.blueAccent)),
+                          child: Text(
+                            'Keywords: Enter keywords to be searched by\nSubject: ex: English, research, biology\nLevel: ex: AP, POST AP\n',
+                            style: TextStyle(fontSize: 24),
                           ),
                         ),
                       ],

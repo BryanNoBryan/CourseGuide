@@ -24,7 +24,6 @@ class _CourseChangeDialogState extends State<CourseChangeDialog> {
   final TextEditingController timeDesc = TextEditingController();
   final TextEditingController level = TextEditingController();
   final TextEditingController prereq = TextEditingController();
-  final TextEditingController coreq = TextEditingController();
   final TextEditingController tags = TextEditingController();
 
   final primaryColor2 = Color(0xff4338CA);
@@ -42,12 +41,7 @@ class _CourseChangeDialogState extends State<CourseChangeDialog> {
     subject.text = !widget.isCreate ? widget.course!.subject ?? '' : '';
     timeDesc.text = !widget.isCreate ? widget.course!.timeDesc ?? '' : '';
     level.text = !widget.isCreate ? widget.course!.level ?? '' : '';
-    prereq.text = !widget.isCreate
-        ? widget.course!.prereq?.reduce((v, e) => '$v,$e') ?? ''
-        : '';
-    coreq.text = !widget.isCreate
-        ? widget.course!.coreq?.reduce((v, e) => v = '$v,$e') ?? ''
-        : '';
+    prereq.text = !widget.isCreate ? widget.course!.prereq ?? '' : '';
     tags.text = !widget.isCreate
         ? widget.course!.tags?.reduce((v, e) => v = '$v,$e') ?? ''
         : '';
@@ -109,9 +103,6 @@ class _CourseChangeDialogState extends State<CourseChangeDialog> {
                 child: Input(title: 'Prerequisites', controller: prereq)),
             Container(
                 margin: const EdgeInsets.symmetric(horizontal: 10),
-                child: Input(title: 'Corequisites', controller: coreq)),
-            Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10),
                 child: Input(title: 'Tags', controller: tags)),
             const SizedBox(
               height: 3.5,
@@ -129,8 +120,7 @@ class _CourseChangeDialogState extends State<CourseChangeDialog> {
                           subject: subject.text,
                           timeDesc: timeDesc.text,
                           level: level.text,
-                          prereq: prereq.text.split(','),
-                          coreq: coreq.text.split(','),
+                          prereq: prereq.text,
                           tags: tags.text.split(','));
 
                       if (widget.isCreate) {

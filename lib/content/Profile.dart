@@ -1,3 +1,4 @@
+import 'package:course_guide/MyColors.dart';
 import 'package:course_guide/providers/User.dart';
 import 'package:course_guide/providers/UserDatabase.dart';
 import 'package:course_guide/providers/database.dart';
@@ -41,13 +42,16 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
         body: Column(
       children: [
-        TextButton(
+        ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+            ),
             onPressed: () {
               UserState().logout();
             },
             child: Text(
               'Logout',
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 32),
             )),
         Expanded(
           child: Center(
@@ -73,7 +77,10 @@ class _ProfileState extends State<Profile> {
                   name: 'officialClass',
                   controller: officialClass,
                 ),
-                TextButton(
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                    ),
                     onPressed: () {
                       MyUser newUser = MyUser(
                         OSIS: OSIS.text,
@@ -88,7 +95,7 @@ class _ProfileState extends State<Profile> {
                     },
                     child: Text(
                       'Update Profile',
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: 32),
                     )),
               ],
             ),
@@ -111,11 +118,12 @@ class InputHelper extends StatelessWidget {
       child: TextField(
         controller: controller,
         decoration: InputDecoration(
-          label: Text(
-            name,
-            style: TextStyle(fontSize: 12),
-          ),
-        ),
+            label: Text(
+              name,
+              style: TextStyle(fontSize: 16),
+            ),
+            filled: true,
+            fillColor: MyColors.lightBlue),
       ),
     );
   }

@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:course_guide/providers/Course.dart';
+import 'package:csv/csv.dart';
 
 class Database {
   static final Database _state = Database._init();
@@ -39,7 +42,7 @@ class Database {
               (doc) => doc,
               onError: (e) => print("Error updating document $e"),
             );
-    ;
+
     print('bruh');
     courses =
         snapshot.docs.map((doc) => Course.fromFirestore(doc, null)).toList();
@@ -62,8 +65,8 @@ class Database {
     print('course queried');
 
     keywords?.forEach((e) => e.toLowerCase());
-    subject?.toLowerCase();
-    level?.toLowerCase();
+    subject = subject?.toLowerCase();
+    level = level?.toLowerCase();
 
     queriedCourses = [];
     switch (query) {

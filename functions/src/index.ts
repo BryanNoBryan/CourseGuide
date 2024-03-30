@@ -42,13 +42,24 @@ exports.makeAdmin = v2.https.onCall(async (request) => {
         });
 });
 
-exports.userIntoDatabase = v1.auth.user().onCreate((user) => {
-    admin.firestore().collection('Users').doc(user.uid).set({'UID': user.uid});
-});
+// exports.admimTemp = v2.https.onCall(async (request) => {
+//     const user = await getAuth().getUserByEmail(request.data.emailToElevate);
+//     const perms = request.data.role;
+
+//     getAuth()
+//         .setCustomUserClaims(user.uid, { role: perms })
+//         .then(() => {
+//             return `magic ${user.email} is changed to ${perms}`;
+//         }).catch((e) => {
+//             error('setting claims error', e);
+//         });
+// });
 
 export const addDefaultRole = v1.auth.user().onCreate((user) => {
     debugger;
     let uid = user.uid;
+
+    admin.firestore().collection('Users').doc(user.uid).set({'UID': user.uid});
 
     return admin.auth().setCustomUserClaims(uid, {
         role: 'regular',

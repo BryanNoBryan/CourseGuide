@@ -118,18 +118,6 @@ class _VerifyEmailState extends State<VerifyEmail> {
             SizedBox(
               height: 10,
             ),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {});
-                log('state set');
-              },
-              child: Text('set state'),
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-            ),
           ],
         ));
       },

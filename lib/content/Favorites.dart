@@ -46,21 +46,26 @@ class _FavoritesState extends State<Favorites> {
             return SizedBox.shrink();
           } else if (snapshot.hasData &&
               snapshot.connectionState == ConnectionState.done) {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                return CourseWidget(
-                  course: snapshot.data![index],
-                  onFavorite: () async {
-                    await UserDatabase().removeFromFavorite(
-                        snapshot.data![index].code ?? 'ERROR');
-                    favorites = await UserDatabase().getFavorites(user);
-                    setState(() {});
-                  },
-                  admin: false,
-                  hasAccount: true,
-                );
-              },
+            return Center(
+              child: ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: EdgeInsets.all(20),
+                    child: CourseWidget(
+                      course: snapshot.data![index],
+                      onFavorite: () async {
+                        await UserDatabase().removeFromFavorite(
+                            snapshot.data![index].code ?? 'ERROR');
+                        favorites = await UserDatabase().getFavorites(user);
+                        setState(() {});
+                      },
+                      admin: false,
+                      hasAccount: true,
+                    ),
+                  );
+                },
+              ),
             );
           } else {
             return const CircularProgressIndicator();

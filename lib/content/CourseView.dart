@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:course_guide/MyColors.dart';
 import 'package:course_guide/navigation/MyNavigator.dart';
 import 'package:course_guide/providers/Course.dart';
 import 'package:course_guide/providers/UserDatabase.dart';
@@ -44,7 +45,7 @@ class _CourseViewState extends State<CourseView> {
           Center(
             child: Text(
               'Course View',
-              style: TextStyle(fontSize: 36),
+              style: TextStyle(fontSize: 36, color: Colors.white),
             ),
           ),
           Expanded(
@@ -59,7 +60,7 @@ class _CourseViewState extends State<CourseView> {
                       children: [
                         Text(
                           'Query By: ',
-                          style: TextStyle(fontSize: 26),
+                          style: TextStyle(fontSize: 26, color: Colors.white),
                         ),
                         Container(
                           height: 70,
@@ -67,9 +68,13 @@ class _CourseViewState extends State<CourseView> {
                           child: DropdownButton<String>(
                             isExpanded: true,
                             value: queryChoice,
-                            icon: const Icon(Icons.arrow_downward),
+                            icon: const Icon(
+                              Icons.arrow_downward,
+                              color: Color.fromARGB(255, 201, 238, 255),
+                            ),
                             elevation: 16,
-                            style: const TextStyle(color: Colors.deepPurple),
+                            dropdownColor: MyColors.lightBlue,
+                            style: const TextStyle(color: Colors.black),
                             underline: Container(
                               height: 2,
                               color: Colors.deepPurpleAccent,
@@ -84,9 +89,13 @@ class _CourseViewState extends State<CourseView> {
                                 .map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
-                                child: Text(
-                                  value,
-                                  style: TextStyle(fontSize: 20),
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  color: MyColors.lightBlue,
+                                  child: Text(
+                                    value,
+                                    style: TextStyle(fontSize: 20),
+                                  ),
                                 ),
                               );
                             }).toList(),
@@ -95,17 +104,24 @@ class _CourseViewState extends State<CourseView> {
                         switch (queryChoice) {
                           'Keywords' => TextField(
                               controller: keywords,
-                              decoration:
-                                  InputDecoration(label: Text('Keywords')),
+                              decoration: InputDecoration(
+                                  label: Text('Keywords'),
+                                  filled: true,
+                                  fillColor: MyColors.lightBlue),
                             ),
                           'Subject' => TextField(
                               controller: subject,
-                              decoration:
-                                  InputDecoration(label: Text('Subject')),
+                              decoration: InputDecoration(
+                                  label: Text('Subject'),
+                                  filled: true,
+                                  fillColor: MyColors.lightBlue),
                             ),
                           'Level' => TextField(
                               controller: level,
-                              decoration: InputDecoration(label: Text('Level')),
+                              decoration: InputDecoration(
+                                  label: Text('Level'),
+                                  filled: true,
+                                  fillColor: MyColors.lightBlue),
                             ),
                           _ => TextField(),
                         },
@@ -116,6 +132,7 @@ class _CourseViewState extends State<CourseView> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
+                              backgroundColor: MyColors.lightBlue,
                             ),
                             onPressed: () async {
                               courses = Database().queryCourses(
@@ -140,6 +157,39 @@ class _CourseViewState extends State<CourseView> {
                             ),
                           ),
                         ),
+                        Container(
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                              color: MyColors.lightBlue,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: Colors.blueAccent)),
+                          child: Text(
+                            'Keywords: Enter keywords to be searched by\nSubject: ex: English, research, biology\nLevel: ex: AP, POST AP\n',
+                            style: TextStyle(fontSize: 24),
+                          ),
+                        ),
+                        // ElevatedButton(
+                        //   style: ElevatedButton.styleFrom(
+                        //     shape: RoundedRectangleBorder(
+                        //       borderRadius: BorderRadius.circular(5.0),
+                        //     ),
+                        //   ),
+                        //   onPressed: () async {
+                        //     print('temp admin1');
+                        //     final result = await FirebaseFunctions.instance
+                        //         .httpsCallable('admimTemp')
+                        //         .call(<String, dynamic>{
+                        //       'emailToElevate': 'liub3@bxscience.edu',
+                        //       'role': 'super-admin',
+                        //     });
+                        //     print('temp admin2');
+                        //     log(result.data.toString());
+                        //   },
+                        //   child: Text(
+                        //     "admintemp",
+                        //     style: TextStyle(fontSize: 32),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
