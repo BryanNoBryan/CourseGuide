@@ -102,56 +102,58 @@ class _PermissionsViewState extends State<PermissionsView> {
               style: TextStyle(fontSize: 32),
             ),
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0),
-              ),
-            ),
-            onPressed: () async {
-              print('await csv');
-              var thing = await getCSV();
-              print('gots csv');
-              for (var course in thing) {
-                print('tried $course 1');
-                Course c = Course(
-                  code: course[0],
-                  name: course[1],
-                  description: course[2],
-                  subject: course[3],
-                  timeDesc: course[4],
-                  level: course[5],
-                  prereq: course[6],
-                  tags: (course[7] as String).split('|'),
-                );
-                print('tried $course 2');
-                await Database().addCourse(c);
-                print('tried $course 3');
-                // String s = '';
-                // for (var thing3 in course) {
-                //   s += '$thing3 ';
-                // }
-                // print(s);
-              }
-            },
-            child: Text(
-              "Print CSV",
-              style: TextStyle(fontSize: 32),
-            ),
-          ),
+          // ElevatedButton(
+          //   style: ElevatedButton.styleFrom(
+          //     shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(5.0),
+          //     ),
+          //   ),
+          //   onPressed: () async {
+          //     print('await csv');
+          //     var thing = await getCSV();
+          //     print('gots csv');
+          //     for (var course in thing) {
+          //       print('tried $course 1');
+          //       Course c = Course(
+          //         code: course[0],
+          //         name: course[1],
+          //         description: course[2],
+          //         subject: course[3],
+          //         timeDesc: course[4],
+          //         level: course[5],
+          //         prereq: course[6],
+          //         tags: (course[7] as String).split('|'),
+          //       );
+          //       print('tried $course 2');
+          //       await Database().addCourse(c);
+          //       print('tried $course 3');
+          //       // String s = '';
+          //       // for (var thing3 in course) {
+          //       //   s += '$thing3 ';
+          //       // }
+          //       // print(s);
+          //     }
+          //   },
+          //   child: Text(
+          //     "Print CSV",
+          //     style: TextStyle(fontSize: 32),
+          //   ),
+          // ),
         ],
       ),
     ));
   }
 
-  Future<List<List<dynamic>>> getCSV() async {
-    // final input = File('assets/csv/courses.csv').openRead();
-    final input = await rootBundle.loadString("assets/csv/courses.csv");
-    List<List<dynamic>> data = CsvToListConverter().convert(input);
-    // final fields = await input
-    //     .transform(utf8.decoder)
-    //     .transform(CsvToListConverter())
-    //     .toList();
-    return data;
-  }
+//THIS METHOD BELOW AND WIDGET ABOVE UPDATES THE COURSES AVAILABLE
+
+  // Future<List<List<dynamic>>> getCSV() async {
+  //   // final input = File('assets/csv/courses.csv').openRead();
+  //   final input = await rootBundle.loadString("assets/csv/courses.csv");
+  //   List<List<dynamic>> data = CsvToListConverter().convert(input);
+  //   // final fields = await input
+  //   //     .transform(utf8.decoder)
+  //   //     .transform(CsvToListConverter())
+  //   //     .toList();
+  //   return data;
+  // }
 }

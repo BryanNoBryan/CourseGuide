@@ -27,6 +27,7 @@ module.exports = {
   rules: {
     "quotes": ["warn", "double"],
     "import/no-unresolved": 0,
-    "indent": ["warn", 4],
+    "indent": ["warn", 2],
+    "linebreak-style": 0,
   },
 };

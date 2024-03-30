@@ -1,4 +1,4 @@
-/*eslint-disable*/
+/* eslint-disable */
 
 
 import * as v1 from 'firebase-functions/v1';
@@ -9,7 +9,6 @@ import { error } from 'firebase-functions/logger';
 admin.initializeApp();
 
 exports.makeAdmin = v2.https.onCall(async (request) => {
-
     const reqUID = request.auth?.uid;
     if (reqUID == null) {
         error('not logged in');
@@ -70,7 +69,6 @@ export const addDefaultRole = v1.auth.user().onCreate((user) => {
         }
     }).catch((err: any) => {return err;})
 });
-
 
 
 
